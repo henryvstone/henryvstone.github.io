@@ -1,0 +1,135 @@
+<html>
+<head>
+<title>Mass of an Electron</title>
+</head>
+<body>
+<canvas onmousemove="mouseMove(event)" width="800" height="600" id="ele" style="border:solid;background:#cccccc">Browser does not support HTML5</canvas>
+</body>
+</html>
+
+<script>
+
+var r = 120;
+var bar1 = .5;
+var bar2 = .5;
+
+drawDiagram();
+
+function mouseMove(e) {
+    if(e.which == 1){
+		if(e.clientX > 680 && e.clientX < 740){
+			var y = e.clientY - 40;
+			y /= 540;
+			if(y > 1){y = 1;}
+			if(y < 0){y = 0;}
+			bar1 = 1-y;
+		}
+		if(e.clientX > 740 && e.clientX < 800){
+			var y = e.clientY - 40;
+			y /= 540;
+			if(y > 1){y = 1;}
+			if(y < 0){y = 0;}
+			bar2 = 1-y;
+		}
+	}
+	r = 120 * bar1 / bar2;
+	drawDiagram();
+}
+
+function drawDiagram() {
+	var c = document.getElementById("ele");
+	var ctx = c.getContext("2d");
+	ctx.clearRect(0,0,800,600);
+	ctx.lineWidth = 3;
+	ctx.font = "20px serif";
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	
+	ctx.strokeStyle = '#000000';
+	ctx.beginPath();
+	ctx.arc(340, 300, 200, 0, 2 * Math.PI);
+	ctx.fillStyle = "#eeeeee";
+	ctx.fill();
+	ctx.stroke();
+	
+	ctx.lineWidth = 20;
+	ctx.strokeStyle = '#aa0000';
+	ctx.beginPath();
+	ctx.arc(340, 300, 250, 0, 2 * Math.PI);
+	ctx.stroke();
+	ctx.lineWidth = 3;
+	
+	ctx.strokeStyle = '#000000';
+	ctx.beginPath();
+	ctx.arc(340, 300, 260, 0, 2 * Math.PI);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.arc(340, 300, 240, 0, 2 * Math.PI);
+	ctx.stroke();
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#0000ff';
+	ctx.moveTo(690, 580);
+	ctx.lineTo(260, 580);
+	ctx.lineTo(260, 440);
+	ctx.lineTo(275, 440);
+	ctx.stroke();
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#4B0082';
+	ctx.moveTo(760, 570);
+	ctx.lineTo(506, 570);
+	ctx.lineTo(506, 500);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.strokeStyle = '#00dd00';
+	ctx.moveTo(340, 440);
+	for(var i = 0;i <= 360;i+=.5){
+		var x = Math.sin(i * 0.0174533) * r + 340;
+		var y = Math.cos(i * 0.0174533) * r + 440 - r;
+		var d = Math.sqrt((x-340)*(x-340)+(y-300)*(y-300));
+		if(d >= 200){
+			break;
+		}
+		ctx.lineTo(x, y);
+	}
+	ctx.stroke();
+
+	ctx.fillStyle = "#000000";
+	ctx.shadowBlur = 12;
+	ctx.shadowColor = "red";
+	ctx.fillRect(275,437,5,6);
+	ctx.fillRect(275,437,5,6);
+	ctx.fillRect(275,437,5,6);
+	ctx.shadowBlur = 0;
+
+	ctx.fillStyle = "#333333";
+	ctx.fillRect(305,432,10,16);
+	ctx.fillStyle = "#000000";
+	ctx.fillRect(280,430,27,20);
+	ctx.fillRect(313,430,27,20);
+	ctx.fillStyle = "#000000";
+	
+	ctx.fillStyle = "#ffffff";
+	ctx.fillRect(760,10,30,580);
+	ctx.fillRect(690,10,30,580);
+	ctx.fillStyle = "#000000";
+	ctx.fillRect(690,10+540*(1-bar1),30,40);
+	ctx.fillRect(760,10+540*(1-bar2),30,40);
+	
+	ctx.fillText("Bulb with",340,130);
+	ctx.fillText("detector gas",340,148);
+	
+	ctx.fillText("Electron emitter",335,459);
+	ctx.fillText("and accelerator",335,477);
+	
+	ctx.rotate(-1 * Math.PI/2);
+	ctx.fillText("Helmholtz Coils",-300,60);
+	ctx.fillText("Strength of accelerating electric potential:",-300,670);
+	ctx.fillText("Strength of magnetic field:",-300,740);
+	
+	ctx.rotate(1 * Math.PI/2);
+}
+
+</script>

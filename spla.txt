@@ -1,0 +1,196 @@
+<html>
+<head>
+<title>Diamond Magnetometer</title>
+</head>
+<body>
+<canvas onmousemove="mouseMove(event)" width="800" height="600" id="mag" style="border:solid;">Browser does not support HTML5</canvas>
+</body>
+</html>
+
+<script>
+
+function draw(){
+    var c = document.getElementById("mag");
+	var ctx = c.getContext("2d");
+	ctx.clearRect(0,0,800,600);
+	
+	ctx.font = "50px serif";
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	
+	ctx.fillText("NV Center Magnetometry",400,40);
+	
+	
+	ctx.font = "20px serif";
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#00ff00';
+	ctx.moveTo(0, 225);
+	ctx.lineTo(400,225);
+	ctx.stroke();
+	
+	for(var a = -1;a <= 1; a++){
+		ctx.beginPath();
+		ctx.strokeStyle = '#000000';
+		ctx.moveTo(420, 225 + 8 * a);
+		var dis = fs * 100;
+		for(var i = 420;i <= 800;i+=5){
+			ctx.lineTo(i, 225 + 8 * a + 4 * Math.sin((i-420)/20));
+		}
+		ctx.lineWidth = 2;
+		ctx.stroke();
+	}
+	
+	
+	ctx.fillStyle = "#000000";
+	ctx.shadowBlur = 10;
+	ctx.shadowColor = "red";
+	ctx.fillRect(400-10,225-10,20,20);
+	ctx.shadowBlur = 0;
+	
+	ctx.fillStyle = "#000000";
+	ctx.fillRect(400-7,241,14,4);
+	ctx.fillStyle = "#666666";
+	ctx.fillRect(400-25,245,50,85);
+	ctx.fillStyle = "#000000";
+	
+	ctx.fillText("Red Light Sensor",400,340);
+	ctx.fillText("NV Center",400,180);
+	ctx.fillText("Diamond",400,200);
+	ctx.fillText("532nm Laser",200,211);
+	ctx.fillText("Varying Microwave Radiation",630,197);
+	
+	var d = Math.sqrt((400-mouseX)*(400-mouseX)+(225-mouseY)*(225-mouseY));
+	var fs = (140/d)*(140/d);
+	var s = (140/d);
+	
+	ctx.fillStyle = "#ff0000";
+	ctx.fillRect(mouseX-32,mouseY-16,32,32);
+	ctx.fillStyle = "#222222";
+	ctx.fillRect(mouseX,mouseY-16,32,32);
+	ctx.fillStyle = "#cccccc";
+	ctx.fillText("magnet",mouseX,mouseY);
+	ctx.fillStyle = "#000000";
+	
+	ctx.beginPath();
+	ctx.moveTo(375,310);
+	ctx.lineTo(50,310);
+	ctx.lineTo(50,430);
+	ctx.stroke();
+
+	ctx.lineWidth = 3;
+
+	if(s > 4){
+		s = 4;
+	}if(s < -4){
+		s = -4;
+	}	
+
+	ctx.beginPath();
+	ctx.moveTo(665,370);
+	ctx.lineTo(750,370);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.moveTo(645,320+s*4);
+	ctx.lineTo(705,320+s*4);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.moveTo(720,320-s*4);
+	ctx.lineTo(780,320-s*4);
+	ctx.stroke();
+
+	ctx.fillText("Spin Triplet",712,400);
+	ctx.fillText("0",712,380);
+	ctx.fillText("-1",675,330+s*4);
+	ctx.fillText("+1",750,330-s*4);
+
+	ctx.lineWidth = 1;
+
+	ctx.beginPath();
+	ctx.moveTo(800,290);
+	ctx.lineTo(585,290);
+	ctx.lineTo(585,420);
+	ctx.lineTo(800,420);
+	ctx.stroke();
+	
+	ctx.beginPath();
+	ctx.moveTo(635,305);
+	ctx.lineTo(635,395);
+	ctx.stroke();
+
+	ctx.font = "14px serif";
+	ctx.fillText("Energy",610,350);
+	
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#000000';
+    ctx.moveTo(100, 460
+		+ 50 * Math.pow(2.7, -1 * (100 - 450 + dis)*(100 - 450 + dis) / 1000)
+		+ 50 * Math.pow(2.7, -1 * (100 - 450 - dis)*(100 - 450 - dis) / 1000)
+		);
+	var dis = fs * 100;
+	for(var i = 100;i <= 800;i+=5){
+		ctx.lineTo(i, 460
+		+ 50 * Math.pow(2.7, -1 * (i - 450 + dis)*(i - 450 + dis) / 1000)
+		+ 50 * Math.pow(2.7, -1 * (i - 450 - dis)*(i - 450 - dis) / 1000)
+		);
+	}
+	ctx.lineWidth = 3;
+    ctx.stroke();
+	
+	ctx.fillText("Intensity",50,440);
+	ctx.fillText("Red",50,460);
+	ctx.fillText("Light",50,480);
+	
+	ctx.fillText("Microwave",50,560);
+	ctx.fillText("Frequency",50,580);
+	
+	
+	
+	ctx.fillText("2.87 GHz",450,570);
+	ctx.fillText("2.67 GHz",150,570);
+	ctx.fillText("3.07 GHz",750,570);
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#000000';
+	for(var i = 100;i <= 800;i += 5){
+		if((i-150) % 300 == 0){
+			ctx.moveTo(i, 583);
+		}else if((i-150) % 25 == 0){
+			ctx.moveTo(i, 590);
+		}else{
+			ctx.moveTo(i, 595);
+		}
+		ctx.lineTo(i, 600);
+		
+	}
+	ctx.lineWidth = 2;
+	ctx.stroke();
+}
+
+draw();
+
+var c = document.getElementById("mag");
+var ctx = c.getContext("2d");
+ctx.fillStyle = "#FF0000";
+ctx.fillRect(mouseX,mouseY,150,75);
+
+var mouseX = 0, mouseY = 0;
+function mouseMove(e)
+{
+    if(e.offsetX) {
+        mouseX = e.offsetX;
+        mouseY = e.offsetY;
+    }
+    else if(e.layerX) {
+        mouseX = e.layerX;
+        mouseY = e.layerY;
+    }
+	
+	draw();
+}
+
+
+</script>

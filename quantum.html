@@ -1,0 +1,148 @@
+<canvas width="800" height=800 style="border:solid;" id="pane" onMouseDown="press(event)"></canvas>
+
+<script>
+var charges = []
+
+charges.push(new Charge(350, 400, 2));
+charges.push(new Charge(450, 400, -2));
+
+draw();
+
+function Charge(x, y, c){
+	this.charge = c;
+	this.x = x;
+	this.y = y;
+	
+	
+	this.draw = function(ctx){
+		if(this.charge > 0){
+			ctx.fillStyle = "#ff0000";
+		}else{
+			ctx.fillStyle = "#0000ff";
+		}
+		ctx.fillRect(this.x - 5, this.y - 5, 10, 10);
+		ctx.fillStyle = "#000000";
+	}
+}
+
+function fun(startNum, startX, startY){
+	this.num = startNum;
+	this.delta = real(0);
+	this.x = startX;
+	this.y = startY;
+}
+
+function getPotentialOnCharge(x, y, charge){
+	var sum = 0;
+	for(var i = 0;i < charges.length;i++){
+		var c = charges[i];
+		var dist = Math.sqrt((x - c.x) * (x - c.x) + (y - c.y) * (y - c.y))
+		var pot = -1 * charge * c.charge / dist;
+		sum += pot;
+	}
+	return sum;
+}
+// from http://stackoverflow.com/questions/2173229/how-do-i-write-a-rgb-color-value-in-javascript
+function rgb(r, g, b){
+  r = Math.floor(r);
+  g = Math.floor(g);
+  b = Math.floor(b);
+  return ["rgb(",r,",",g,",",b,")"].join("");
+}
+
+
+
+
+
+
+
+
+
+function inum(real, imaginary){
+	this.real = real;
+	this.imaginary = imaginary;
+	
+	this.s = function(){
+		return this.real + " + " + this.imaginary + "i";
+	}
+	this.add = function(n1){
+		this.real += n1.real;
+		this.imaginary += n1.imaginary;
+	}
+	
+}
+
+function num(val, ival){
+	return new inum(val, ival);
+}
+
+function real(val){
+	return new inum(val, 0);
+}
+
+function add(n1, n2){
+	return new inum(
+	  n1.real + n2.real,
+	  n1.imaginary + n2.imaginary);
+}
+
+function sub(n1, n2){
+	return new inum(
+	  n1.real - n2.real,
+	  n1.imaginary - n2.imaginary);
+}
+
+function mult(n1, n2){
+	return new inum(
+	  n1.real * n2.real - n1.imaginary * n2.imaginary,
+	  n1.real * n2.imaginary + n1.imaginary * n2.real);
+}
+
+function absqr(n1){
+	return Math.abs(n1.real * n1.real + n1.imaginary * n1.imaginary);
+}
+
+
+
+
+
+function draw(){
+	var c = document.getElementById("pane");
+	var ctx = c.getContext("2d");
+	ctx.clearRect(0,0,800,800);
+	
+	for(var i = 0;i < charges.length;i++){
+		charges[i].draw(ctx);
+	}
+	
+	for(var x = 0;x < 800;x += 10){
+		for(var y = 0;y < 800;y += 10){
+			var p = getPotentialOnCharge(x, y, -1) * 2000;
+			ctx.fillStyle = rgb(255 - p, 255 - Math.abs(p), 255 + p);
+			ctx.fillRect(x - 2, y - 2, 4, 4);
+		}
+	}
+	
+	/*var sol = new fun(num(1, 0), 0, 400);
+	for(var x = 0.05;x < 800;x+=0.1){
+		sol.x = x;
+		var p = getPotentialOnCharge(sol.x, sol.y, -1);
+		sol.delta.add(
+		  mult(
+		    mult(
+			  add(sol.num, real(-.5)),
+			  num(0, p)), 
+			real(0.01)));
+		sol.num.add(mult(sol.delta, real(0.01)));
+		ctx.fillStyle = rgb(0, 0, 0);
+		ctx.fillRect(sol.x - 2, sol.y - absqr(sol.num) * 1 - 2, 4, 4);
+		ctx.fillStyle = rgb(255, 0, 0);
+		ctx.fillRect(sol.x - 2, sol.y - sol.num.real * 1 - 2, 4, 4);
+		ctx.fillStyle = rgb(0, 0, 255);
+		ctx.fillRect(sol.x - 2, sol.y - sol.num.imaginary * 1 - 2, 4, 4);
+		
+	}*/
+}
+
+
+</script>

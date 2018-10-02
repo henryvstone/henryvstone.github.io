@@ -1,0 +1,160 @@
+<html>
+<head>
+<title>Speed of Light Lab</title>
+</head>
+<body>
+<canvas onmousemove="mouseMove(event)" width="800" height="600" id="mag" style="border:solid;">Browser does not support HTML5</canvas>
+</body>
+</html>
+
+<script>
+
+var mirrorDist = 500;
+
+function draw(){
+    var c = document.getElementById("mag");
+	var ctx = c.getContext("2d");
+	ctx.clearRect(0,0,800,600);
+	
+	ctx.font = "15px serif";
+	ctx.textBaseline = 'middle';
+	
+	ctx.fillRect(20,510,74,20);
+	ctx.fillRect(94,515,6,10);
+	
+	ctx.fillRect(60,400,40,80);
+	ctx.fillStyle = "#aaaaaa";
+	ctx.fillRect(90,437,10,6);
+	ctx.fillRect(90,457,10,6);
+	ctx.fillStyle = "#000000";
+	
+	
+	
+	var distp = mirrorDist - 100;
+	var dist = distp*2/100;
+	
+	
+	ctx.lineWidth = 2;
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#ff0000';
+    ctx.moveTo(100, 520);
+	ctx.lineTo(mirrorDist, 520);
+    ctx.lineTo(mirrorDist, 440);
+	ctx.lineTo(90, 440);
+	
+	
+	ctx.moveTo(130, 520);
+	ctx.lineTo(130, 460);
+	ctx.lineTo(90, 460);
+	
+    ctx.stroke();
+	
+	
+	ctx.lineWidth = 2;
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#000000';
+    ctx.moveTo(450, 0);
+	ctx.lineTo(450, 350);
+    ctx.lineTo(0, 350);
+    ctx.stroke();
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#ff0000';
+    ctx.moveTo(i, 175-Math.sin((0-225)/100)*130);
+	for(var i = 0;i <= 450;i+=5){
+		ctx.lineTo(i, 175-Math.sin((i-225)/100)*130);
+	}
+	ctx.lineWidth = 2;
+    ctx.stroke();
+	
+	var move = 2 * dist  -.5;
+	ctx.beginPath();
+	ctx.strokeStyle = '#0000ff';
+    ctx.moveTo(0, 175-Math.sin((0-225+move*3)/100)*130);
+	for(var i = 0;i <= 450;i+=5){
+		ctx.lineTo(i, 175-Math.sin((i-225+move*3)/100)*130);
+	}
+	ctx.lineWidth = 2;
+    ctx.stroke();
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#000000';
+    ctx.moveTo(225, 175);
+	ctx.lineTo(225 - move * 3, 175);
+	ctx.moveTo(225, 170);
+	ctx.lineTo(225, 180);
+	ctx.moveTo(225 - move * 3, 170);
+	ctx.lineTo(225 - move * 3, 180);
+    ctx.stroke();
+	
+	ctx.fillText(Math.round(move/3*100)/10 + "ns",225-move*1.5,165);
+	
+	
+	ctx.beginPath();
+	ctx.strokeStyle = '#aabbff';
+    ctx.moveTo(mirrorDist - 15, 535);
+	ctx.lineTo(mirrorDist + 15, 505);
+	
+	ctx.moveTo(mirrorDist + 15, 455);
+	ctx.lineTo(mirrorDist - 15, 425);
+	
+	
+	ctx.moveTo(130 - 15, 535);
+	ctx.lineTo(130 + 15, 505);
+	
+	ctx.moveTo(130 + 15, 475);
+	ctx.lineTo(130 - 15, 445);
+    ctx.stroke();
+	
+
+	ctx.fillText("D = " + dist + "m",100+distp/2,430);
+	ctx.fillText("D = " + 1.5 + "m",mirrorDist - 35,478);
+	
+	
+	ctx.textAlign = 'left';
+	ctx.fillText("D  = " + 2 + "m",20,553);
+	ctx.font = "10px serif";
+	ctx.fillText("1",30,560);
+	ctx.font = "15px serif";
+	
+	ctx.fillText("D  = 2(D) + 1.5m = 2(" + dist + "m) + 1.5m = " + (2 * dist + 1.5) + "m",20,575);
+	ctx.font = "10px serif";
+	ctx.fillText("2",30,582);
+	ctx.font = "15px serif";
+	ctx.textAlign = 'center';
+	
+}
+
+
+draw();
+
+var mouseX = 0, mouseY = 0;
+function mouseMove(e)
+{
+    if(e.offsetX) {
+        mouseX = e.offsetX;
+        mouseY = e.offsetY;
+		
+    }
+    else if(e.layerX) {
+        mouseX = e.layerX;
+        mouseY = e.layerY;
+    }
+	
+	if(e.which == 1){
+		mirrorDist = mouseX;
+		if(mirrorDist > 750){
+			mirrorDist = 750;
+		}
+		if(mirrorDist < 200){
+			mirrorDist = 200;
+		}
+	}
+	
+	draw();
+}
+
+
+</script>

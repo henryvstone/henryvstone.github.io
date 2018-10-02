@@ -1,0 +1,96 @@
+<html>
+<head>
+</head>
+<body>
+<input type="range" id="slide" value="0" onChange="updateSlider()">
+<p id="demo"></p>
+<br/>
+<canvas id="function" width="400" height="400" style="border:solid"></canvas>
+
+<script>
+	var aproximations = 1;	
+
+	var rFact = function(num){
+	    if (num === 0)
+	      { return 1; }
+	    else
+	      { return num * rFact( num - 1 ); }
+	}
+
+	var getValue = function(x){
+		var y = 0.0;
+		var a = Math.trunc(aproximations);
+		for(var i = 1;i <= a;i++){
+			if(i % 2 != 0){
+				y += (i % 2)*Math.pow(-1,(i-1)/2)*Math.pow(x,i)/rFact(i);
+			}
+		}
+		if((a+1) % 2 != 0){
+			y += ((a+1) % 2)*Math.pow(-1,((a+1)-1)/2)*Math.pow(x,(a+1))/rFact((a+1))*(aproximations-a);
+		}
+		
+		return y;
+	}
+
+	var draw = function(){
+		var c = document.getElementById("function");
+		var ctx = c.getContext("2d");
+
+		ctx.clearRect(0,0,800,600);	
+
+		ctx.moveTo(0,200);
+		ctx.lineTo(400,200);
+		ctx.moveTo(200,0);
+		ctx.lineTo(200,400);
+
+		for(var x = 1;x < 20;x++){
+			if(x != 0){
+				ctx.moveTo(x*20,195);
+				ctx.lineTo(x*20,205);
+			}
+		}
+
+		for(var y = 1;y < 20;y++){
+			if(y != 0){
+				ctx.moveTo(195, y*20);
+				ctx.lineTo(205, y*20);
+			}
+		}
+		ctx.stroke();
+
+		ctx.moveTo(0, getValue(-10)*-20+200);
+		for(var x = 1;x <= 200;x++){
+			ctx.lineTo(x*2, getValue(-10+x/10)*-20+200);
+		}
+		ctx.stroke();
+
+
+		
+		ctx.moveTo(0,200);
+		ctx.lineTo(400,200);
+	}
+
+	var updateSlider = function(){
+		var x = document.getElementById("slide").value;
+		document.getElementById("demo").innerHTML = x/10;
+		aproximations = x/10;
+		draw();
+	}
+
+	updateSlider();
+
+	draw();
+
+	var update = function(){
+		aproximations += .02;
+		draw();
+		setTimeout(update, 20);
+	}
+
+	update();
+
+
+	
+</script>
+</body>
+</html>
